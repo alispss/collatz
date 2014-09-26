@@ -42,7 +42,7 @@ int cycle_length(int i)
         }
         else 
         {
-            i = (3 * i + 1) >> 1;
+            i = i + (i >> 1) + 1;
             length += 2;
         }
     }
@@ -55,6 +55,8 @@ int cycle_length(int i)
 
 int collatz_eval (int i, int j) {
     int max = 0;
+    if (i <= j / 2)
+       i = (j / 2) + 1;
     for(; i <= j; i++)
     { 
         int length = cycle_length(i);
