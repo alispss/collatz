@@ -9,6 +9,7 @@
 // --------
 
 #include <cassert>  // assert
+#include <cstring>  // memset
 #include <iostream> // endl, istream, ostream
 #include <utility>  // make_pair, pair
 
@@ -25,6 +26,7 @@ std::pair<int, int> collatz_read (std::istream& r) {
     r >> j;
     return std::make_pair(i, j);}
 
+int cycle_cache[1000001];
 
 // -------------
 // cycle_length 
@@ -32,9 +34,16 @@ std::pair<int, int> collatz_read (std::istream& r) {
 
 int cycle_length(int i)
 {
+    int j = i;
     int length = 1;
+    if ( i <= 1000000 && cycle_cache[i] != 0) return cycle_cache[i];
     while (i > 1)
     {
+        if(i <= 1000000 && cycle_cache[i] != 0)
+        {
+            length += cycle_cache[i] - 1;
+            break;
+        }
         if(i % 2 == 0)
         {
             i >>= 1;
@@ -46,6 +55,7 @@ int cycle_length(int i)
             length += 2;
         }
     }
+    cycle_cache[j] = length;
     return length;
 }
 
@@ -56,7 +66,7 @@ int cycle_length(int i)
 int collatz_eval (int i, int j) {
     int max = 0;
     if (i <= j / 2)
-       i = (j / 2) + 1;
+        i = (j / 2) + 1;
     for(; i <= j; i++)
     { 
         int length = cycle_length(i);
@@ -78,6 +88,7 @@ void collatz_print (std::ostream& w, int i, int j, int v) {
 // -------------
 
 void collatz_solve (std::istream& r, std::ostream& w) {
+    std::cout << sizeof(cycle_cache) << std::endl;
     while (true) {
         const std::pair<int, int> p = collatz_read(r);
         if (p == std::make_pair(0, 0))
