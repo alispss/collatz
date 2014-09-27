@@ -17,7 +17,7 @@
 // collatz_read
 // ------------
 
-std::pair<int, int> collatz_read (std::istream& r) {
+inline std::pair<int, int> collatz_read (std::istream& r) {
     int i;
     r >> i;
     if (!r)
@@ -32,7 +32,7 @@ int cycle_cache[1000001];
 // cycle_length 
 // -------------
 
-int cycle_length(int i)
+inline int cycle_length(int i)
 {
     int j = i;
     int length = 1;
@@ -60,13 +60,40 @@ int cycle_length(int i)
 }
 
 // ------------
+// collatz_length_recursive -- doesn't work with cache yet
+// ------------
+
+int cycle_length_recursive(int i)
+{
+    //if ( i <= 1000000 && cycle_cache[i] != 0) return cycle_cache[i];
+    /*else*/ if( i == 1 )
+        return 1;
+    else if(i % 2 == 0)
+    {
+        //cycle_cache[i] = cycle_length_recursive(i >> 1);
+        return  1 + cycle_length_recursive(i >> 1);
+    }
+    else
+    {
+        //cycle_cache[i] = cycle_length_recursive(i + (i >> 1) + 1);
+        return 2 + cycle_length_recursive(i + (i >> 1) + 1);
+    }
+}
+
+// ------------
 // collatz_eval
 // ------------
 
-int collatz_eval (int i, int j) {
+inline int collatz_eval (int i, int j) {
     int max = 0;
     if (i <= j / 2)
         i = (j / 2) + 1;
+    if( i > j )
+    {
+        int temp = j;
+        j = i;
+        i = temp;
+    }
     for(; i <= j; i++)
     { 
         int length = cycle_length(i);
@@ -80,15 +107,15 @@ int collatz_eval (int i, int j) {
 // collatz_print
 // -------------
 
-void collatz_print (std::ostream& w, int i, int j, int v) {
+inline void collatz_print (std::ostream& w, int i, int j, int v) {
     w << i << " " << j << " " << v << std::endl;}
 
 // -------------
 // collatz_solve
 // -------------
 
-void collatz_solve (std::istream& r, std::ostream& w) {
-    std::cout << sizeof(cycle_cache) << std::endl;
+inline void collatz_solve (std::istream& r, std::ostream& w) {
+    //std::cout << sizeof(cycle_cache) << std::endl;
     while (true) {
         const std::pair<int, int> p = collatz_read(r);
         if (p == std::make_pair(0, 0))
