@@ -90,9 +90,9 @@ inline int collatz_eval (int i, int j) {
         i = (j / 2) + 1;
     if( i > j )
     {
-        int temp = j;
-        j = i;
-        i = temp;
+        i = i ^ j;
+        j = i ^ j;
+        i = i ^ j;
     }
     for(; i <= j; i++)
     { 
